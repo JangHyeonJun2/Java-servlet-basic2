@@ -1,4 +1,4 @@
-package sec01.ex01;
+package sec01.ex02;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -7,7 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-//@WebServlet("/login")
+import java.net.URLEncoder;
+
+@WebServlet("/login")
 public class LoginServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
@@ -36,8 +38,13 @@ public class LoginServlet extends HttpServlet {
         data+="이메일: "+user_email;
         data+="<br>";
         data+="전화번호: "+user_hp;
-        data+="</body></html>";
+        data+="<br>";
         out.print(data);
+
+        user_address = URLEncoder.encode(user_address,"utf-8");//GET방식으로 한글을 전송하기 위해 인코딩한다.
+        out.print("<a href='/second?user_id="+user_id+"&user_pw="+user_pw+"&user_address="+user_address+"'>두 번째 서블릿으로 보내기</a>");//a 태그를 이용해 링크 클릭 시 서블릿
+                                                                                                                            // /second로 다시 로그인 정보를 전송한다.
+        data+="</body></html>";
     }
 
     @Override
