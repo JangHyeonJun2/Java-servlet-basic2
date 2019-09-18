@@ -290,3 +290,152 @@ public class LoginServlet extends HttpServlet {
 인자 값으로 음수나 setMaxAge() 메서드를 사용하지 않고 쿠키를 만들면 **_Session_** 쿠키로 저장된다.
 
 인자 값으로 양수르 지정하면 Persistence 쿠키로 저장된다.
+-------------
+#### 9.3.3 서블릿에서 쿠키 사용하기
+
+1.Cookie 객체를 생성한 후 쿠키 이름을 cookieTest로 값을 저장한다. 그리고 setMaxAge() 메서드에 쿠키 유효 시간을 24시간으로 설정.그런 다음 response의 addCookie()메서드를 이용해 생성된 쿠키를 브라우저로 전송한다.
+
+```java
+package sec02.ex01;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.URLEncoder;
+import java.util.Date;
+@WebServlet("/set")
+public class SetCookieValue extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("text/html;charset=utf-8");
+        PrintWriter out = resp.getWriter();
+        Date date = new Date();
+
+
+
+        Cookie c = new Cookie("cookieTest", URLEncoder.encode("JSP프로그래밍입니다.","utf-8"));
+        //c.setMaxAge(24*60*60);
+        c.setMaxAge(-1); // 쿠키를 session으로 설명하는 방법 음수를 넘겨주
+        resp.addCookie(c);
+        out.println("현재시간: "+date);
+        out.println("현재 시간을 Cookie로 저장한다.");//이게 무슨 말이지....?
+    }
+}
+```
+
+2.두 번째 서블릿 요청 시에는 request의 getCookies() 메서드를 호출해 브라우저로부터 쿠키를 전달받는다 그리고 전달된 쿠키에서 저장할 때 사용한 이름인 cookieTest로 검색해 값을 가져온다.
+
+```java
+package sec02.ex01;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.URLEncoder;
+
+@WebServlet("/get")
+public class GetCookieValue extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("text/html;charset=utf-8");
+        PrintWriter out = resp.getWriter();
+
+        Cookie[] allValues = req.getCookies();
+        for(int i=0; i<allValues.length;i++){
+            if(allValues[i].getName().equals("cookieTest")){
+                out.println("<h2>Cookie 값 가져오기 :"+ URLEncoder.encode(allValues[i].getValue(),"utf-8"));
+            }
+        }
+    }
+}
+```
+
+#### 9.3.5 쿠키 이용해 팝업창 제한하기
+
+1.웹 페이지가 브라우저에 로드될 때 pageLoad()함수를 호출한 후 쿠키에 접근해 팝업창 관련 정보를 가져온다. getCookieValue() 함수를 호출하여 쿠키 이름 notShowPop의 값이 true가 아니면 팝업창을 나타내고, notShowPop의 값이 true이면 팝업창을 나타내지 않는다.
+
+```javascript
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>자바스크립트에서 쿠기 사용</title>
+    <script type="text/javascript">
+        window.onload = pageLoad;<!-- 브라우저에 웹 페이지가 로드될 때 pageLoad()함수를 호출하여 실행한다. -->
+        function pageLoad() {
+            notShowPop = getCookieValue();
+            if(notShowPop!="true"){
+                window.open("popUp.html","pop","width=200,height=300,history=no,resizable=no,status=no,scrollbars=yes,menubar=no");
+            }
+        }
+        function getCookieValue() {
+            var result = "false";
+            if(document.cookie != "") {
+                cookie = document.cookie.split(";");<!-- document의 cookie 속성으로 쿠키 정보를 문자열로 가져온 후 세미콜론(;)으로 분리해 각각의 쿠키를 얻습니다. -->
+                for (var i = 0; i < cookie.length; i++) {
+                    element = cookie[i].split("=");
+                    value = element[0];
+                    value = value.replace(/^\s*/, '');<!-- 정규식을 이용해 쿠키 이름 문자열의 공백(₩s)을 제거한다. -->
+                    if (value == "notShowPop") {
+                        result = element[1]; <!-- 쿠키 이름이 notShowPop이면 해당하는 쿠키 값을 가져와 반환합니다. -->
+                    }
+                }
+            }
+            return result;
+        }
+        function deleteCookie() {
+            document.cookie = "notShowPop=" + "false" + ";path=/; expires=-1";
+        }
+    </script>
+</head>
+<body>
+    <form>
+        <input type="button" value="쿠키 삭제" onclick="deleteCookie()">
+    </form>
+</body>
+</html>
+```
+
+- 정규식 공부하기
+- cookie형태 다시 보고 javascript의 document.cookie 알아보고 문서화하기
+
+2.popUp.html에서는 오늘 더 이상 팝업창 띄우지 않기에 체크하면 자바스크립트 함수인 setPopUpStart()함수를 호출해 notShowPop의 값을 true로 설정하여 재접속 시 팝업창을 나타내지 않도록 설정한다.
+
+```javascript
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>없음</title>
+    <script type="text/javascript">
+        function setPopUpStart(obj) {
+            if(obj.checked == true){
+                var expireDate = new Date();
+                expireDate.setMonth(expireDate.getMonth()+1);<!-- 유효기간을 한 달로 정한다. -->
+                document.cookie = "notShowPop=" +"true"+";path=/;expires="+expireDate.toString();<!-- 오늘 더 이상 팝업창 띄우지 않기에 체크하면 notShowPop 쿠키 값을 true로 설정하여 재접속시 팝업창을 나타내지 않는다.-->
+                window.close();
+            }
+        }
+    </script>
+</head>
+<body>
+    알림 팝업창입니다.
+    <br><br><br><br><br><br><br>
+    <form>
+        <input type="checkbox" onclick="setPopUpStart(this)">오늘 더 이상 팝업창 띄우지 않기
+    </form>
+</body>
+</html>
+```
+
+
