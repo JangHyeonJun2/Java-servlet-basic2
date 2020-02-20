@@ -1,4 +1,4 @@
-package sec03.ex02;
+package sec03.ex03;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,8 +10,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
 
-@WebServlet("/sess2")
-public class SessionTest2 extends HttpServlet {
+@WebServlet("/sess3")
+public class SessionTest3 extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html;charset=utf-8");
@@ -27,5 +27,6 @@ public class SessionTest2 extends HttpServlet {
         if(session.isNew()){
             out.println("새 세션이 만들어졌습니다.");
         }
+        session.invalidate(); //invalidate()를 호출하여 생성된 세션 객체를 강제로 삭제한다.
     }
 }

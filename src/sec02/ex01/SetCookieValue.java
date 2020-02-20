@@ -22,9 +22,9 @@ public class SetCookieValue extends HttpServlet {
 
         Cookie c = new Cookie("cookieTest", URLEncoder.encode("JSP프로그래밍입니다.","utf-8"));
         //c.setMaxAge(24*60*60);
-        c.setMaxAge(-1); // 쿠키를 session으로 설명하는 방법 음수를 넘겨주기
+        c.setMaxAge(-1); // 쿠키를 session으로 설명하는 방법 음수를 넘겨주
         resp.addCookie(c);
         out.println("현재시간: "+date);
-        out.println("현재 시간을 Cookie로 저장한다.");
+        out.println("현재 시간을 Cookie로 저장한다.");//이게 무슨 말이지....?
     }
 }
