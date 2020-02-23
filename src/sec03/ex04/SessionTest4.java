@@ -8,7 +8,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
-
+/*
+ * 세션 이용하기
+ */
 @WebServlet("/login")
 public class SessionTest4 extends HttpServlet {
     @Override
