@@ -22,7 +22,7 @@ public class SessionTest4 extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         doHandle(req,resp);
     }
-
+    //직접 만든 메서드
     public void doHandle(HttpServletRequest req, HttpServletResponse resp) throws ServletException,IOException{
         req.setCharacterEncoding("utf-8");
         resp.setContentType("text/html;charset=utf-8");
