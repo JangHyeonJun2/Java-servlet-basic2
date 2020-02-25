@@ -44,7 +44,7 @@ public class LoginServlet extends HttpServlet {
         if(result){
             HttpSession session1 = req.getSession();
             session1.setAttribute("isLogon",true);//조회한 결과가 true이면 isLogon속성을 true로 세션에 저장한다.
-            session1.setAttribute("login.id",user_id);
+            session1.setAttribute("login.id",user_id);//login.id라는 이름으로 user_id를 login.id변수에 저장한다는 의미
             session1.setAttribute("login.pw",user_pwd);
 
             out.print("<html><body>");

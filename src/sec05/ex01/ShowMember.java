@@ -18,9 +18,9 @@ public class ShowMember extends HttpServlet {
         String id="";
         String pwd ="";
         Boolean isLogon = false;
-        HttpSession session = req.getSession(false); //
+        HttpSession session = req.getSession(false); //이미 세션이 존재하면 세션을 반환하고,없으면 null을 반환한다.
         if(session != null){
-            isLogon=(Boolean)session.getAttribute("isLogon");
+            isLogon=(Boolean)session.getAttribute("isLogon");//isLogOn속성을 가져와 로그인 상태를 확인한다.
             if(isLogon == true){
                 id = (String)session.getAttribute("login.id");
                 pwd = (String)session.getAttribute("login.pw");
