@@ -26,19 +26,24 @@ public class LoginServlet extends HttpServlet {
         resp.setContentType("text/html;charset=utf-8");
         PrintWriter out = resp.getWriter();
         HttpSession session = req.getSession();
+        /*
+         * 로그인창에서 전송된 ID와 비밀번호를 가져옵니다.
+         */
         String user_id = req.getParameter("user_id");
         String user_pwd = req.getParameter("user_pw");
-
+        /*
+         * MemberVO객체를 생성하고 속성에 ID와 비밀번호를 설정한다.
+         */
         MemberVO memberVO = new MemberVO();
         memberVO.setId(user_id);
         memberVO.setPwd(user_pwd);
 
         MemberDAO dao = new MemberDAO();
-        boolean result = dao.isExisted(memberVO);
+        boolean result = dao.isExisted(memberVO);//MemberDAO의 isExisted() 메서드를 호출하면서 memberVO를 전달
 
         if(result){
             HttpSession session1 = req.getSession();
-            session1.setAttribute("isLogon",true);
+            session1.setAttribute("isLogon",true);//조회한 결과가 true이면 isLogon속성을 true로 세션에 저장한다.
             session1.setAttribute("login.id",user_id);
             session1.setAttribute("login.pw",user_pwd);
 
