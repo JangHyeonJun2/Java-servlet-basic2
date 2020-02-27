@@ -6,7 +6,9 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
+/*
+ * DB연결 속성? 값들은 META-INF에 Resource로 저장 되어 꺼내지게 된다.
+ */
 public class MemberDAO {
     private DataSource dataFactory;
 //    private Connection con;
