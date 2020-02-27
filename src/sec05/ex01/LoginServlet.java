@@ -8,7 +8,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
-
+/*
+ * WebServlet에서 로그인 이름은 각  프로젝트마다 있기 때문에 전에 프로젝트에서 썻던 것은 주석처리를 해야한다.
+ */
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
     @Override
